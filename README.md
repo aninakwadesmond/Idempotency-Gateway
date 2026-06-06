@@ -32,21 +32,25 @@ If you checked all the boxes above, submit your repository link in the applicati
 
 ## Architecture Diagram
 
-![FlowChart](./doc//FlowChart.png)
+## ![FlowChart](./doc//FlowChart.png)
 
 ## **Setup Instructions**
 
-Clone my fork repository
+1.Clone the repository
 git clone https://github.com/aninakwadesmond/Idempotency-Gateway.git
 
-2. Initialize with npm init -y
+2. Install dependencies
+   npm install
 
-3. npm install express mongoose jsonwebtoken dotenv cors cookie-parser bcrypt nodemon
+3. Create your environment file
+   .env
+   Then fill in this values:
 
-4. Create .env file to keep my SECRET_KEYS
-   ** PORT=3001 ** ,MONGO_URL, JWT_SECRET_KEY
+   -PORT=3001
+   -MONGO_URL=mongodb+srv://aninakwahdesmond3_db_user:mista334@cluster0.ypti1pb.mongodb.net/?appName=Cluster0
+   -JWT_SECRET_KEY=mista334
 
-5. Start server
+4. Start the server
    npm start
 
 ## API DOCUMENTATION
@@ -234,14 +238,14 @@ Every payment request is protected by a JWT middleware that runs before Idempote
 -only authentictated user can initialize payment
 -if token is expires, the request never reach the Idempotency layer at all
 
-### User reference on every Idempotency Record
+### 2. User reference on every Idempotency Record
 
 Every Idempotency record stores user mongoose objectID which means:
 -Every transaction is traceable back to the original user that initiate the payment
 -you can query all transaction by a specific user
 -used for audit trial and fraud detection/investigation in real fraud cases
 
-### SHA-256 Body Hashing for Tamper Detection
+### 3. SHA-256 Body Hashing for Tamper Detection
 
 Instead of storing the entire reuest in the db we the hashed output from Sha-256 algorithm
 
@@ -251,12 +255,12 @@ crypto with 'sha-256'algorithm is used instead of brypt.hash() because crypto is
 -same input/payload will always hash to the same output
 -bcrypt attach and random value for same input make it impossible to compare with bcrypt.compare().Moslty recommended for password hash not a request.body hash
 
-### Poling-based flight lock(Race condition)
+### 4. Poling-based flight lock(Race condition)
 
 when two identical request happens same time the second request polls MongoDB every 200ms(waiting for some few seconds to complete the process)
 Avoiding double request which may result in double charging
 
-### Mongo TTL index (24 hours expiry)
+### 5. Mongo TTL index (24 hours expiry)
 
 The createdAt field on each IdempotencyRecord has a TTL (Time To Live) of 24hrs, so after the TTL the document is automatically delected without any cleanup code needed
 -making the same Idempotency-key reusable after 24hrs
