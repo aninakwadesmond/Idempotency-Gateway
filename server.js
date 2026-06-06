@@ -6,6 +6,7 @@ const paymentRoute = require('./routes/idempotency-route');
 const { userRoute } = require('./routes/user-route');
 const cors = require('cors');
 const cookiesParser = require('cookie-parser');
+const healthRoute = require('./routes/health-route');
 
 //initializing app
 const app = express();
@@ -28,6 +29,7 @@ app.use(
 // routes
 app.use('/process-payment', paymentRoute);
 app.use('/user', userRoute);
+app.use('/health', healthRoute);
 
 // errorHandler
 app.use(errorHandler);

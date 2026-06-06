@@ -19,9 +19,9 @@ git clone https://github.com/aninakwadesmond/Idempotency-Gateway.git
    Then fill in this values:<br>
 
 ```
-   -PORT=3001
-   -MONGO_URL=mongodb+srv://aninakwahdesmond3_db_user:mista334@cluster0.ypti1pb.mongodb.net/?appName=Cluster0
-   -JWT_SECRET_KEY=mista334
+   PORT=3001
+   MONGO_URL=mongodb+srv://aninakwahdesmond3_db_user:mista334@cluster0.ypti1pb.mongodb.net/?appName=Cluster0
+   JWT_SECRET_KEY=mista334
 ```
 
 4. Start the server <br>
