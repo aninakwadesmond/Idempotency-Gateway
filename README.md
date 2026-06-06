@@ -113,17 +113,25 @@ All payment request require authorization: Bearer <token> and idempotency-key in
 Initialize new Payment with protected middlewares thus JWT auth and idempotency middleware
 
 Headers:
-authorization:Bearer <token>,
+authorization:Bearer <token>,(optional) <br>
 idempotency-key:<unique uuid>,
 Content-Type:application/json
+
+```
+authorization key is optional if you have the jwt set in your cookies .
+This is by default set after a successful registration
+```
 
 example Headers:
 
 ```
  authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjMxNzRlYmRjZjEzN2QzOTBlNWEwYiIsImVtYWlsIjoiYW5pbmFrd2EyQGdtYWlsLmNvbSIsImlhdCI6MTc4MDY4NzA2OSwiZXhwIjoxNzgwODU5ODY5fQ.q2-NdArX9Jzw3CODXaSjxzpwyZvGpPJBF1pDohAIseY
+
+ # (optional key not required)
 Body:
 
 idempotency-key: abc123
+*(required-key)
 ```
 
 Body:
