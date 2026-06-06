@@ -1,38 +1,10 @@
 Submit your repo link via the [online](https://forms.office.com/e/rGKtfeZCsH) form.
 
----
-
-## 🛑 Pre-Submission Checklist
-
-**WARNING:** Before you submit your solution, you **MUST** pass every item on this list.
-If you miss any of these critical steps, your submission will be **automatically rejected** and you will **NOT** be invited to an interview.
-
-### 1. 📂 Repository & Code
-
-- [ ] **Public Access:** Is your GitHub repository set to **Public**? (We cannot review private repos).
-- [ ] **Clean Code:** Did you remove unnecessary files (like `node_modules`, `.env` with real keys, or `.DS_Store`)?
-- [ ] **Run Check:** if we clone your repo and run `npm start` (or equivalent), does the server start immediately without crashing?
-
-### 2. 📄 Documentation (Crucial)
-
-- [ ] **Architecture Diagram:** Did you include a visual Diagram (Flowchart or Sequence Diagram) in the README?
-- [ ] **README Swap:** Did you **DELETE** the original instructions (the problem brief) from this file and replace it with your own documentation?
-- [ ] **API Docs:** Is there a clear list of Endpoints and Example Requests in the README?
-
-### 3. 🧹 Git Hygiene
-
-- [ ] **Commit History:** Does your repo have multiple commits with meaningful messages? (A single "Initial Commit" is a red flag).
-
----
-
-**Ready?**
-If you checked all the boxes above, submit your repository link in the application form. Good luck! 🚀
-
 # Idempotency Gateway - FinSafe Transaction
 
 ## Architecture Diagram
 
-## ![FlowChart](./doc//FlowChart.png)
+### ![FlowChart](./doc//FlowChart.png)
 
 ## **Setup Instructions**
 
@@ -42,11 +14,11 @@ git clone https://github.com/aninakwadesmond/Idempotency-Gateway.git
 2. Install dependencies <br>
    npm install
 
-```
-3. Create your environment file
-   .env
-   Then fill in this values:
+3. Create your environment file <br>
+   .env <br>
+   Then fill in this values:<br>
 
+```
    -PORT=3001
    -MONGO_URL=mongodb+srv://aninakwahdesmond3_db_user:mista334@cluster0.ypti1pb.mongodb.net/?appName=Cluster0
    -JWT_SECRET_KEY=mista334
@@ -64,14 +36,15 @@ git clone https://github.com/aninakwadesmond/Idempotency-Gateway.git
 Create a new User account if one account of such email does not exist in the database.
 Set JWT token in the cookies and header and will be pass alongside any other request.
 
-Headers:
-Content-Type:application/json
+Headers: <br>
+Content-Type: application/json <br>
 
 Body:
 
 ##### {"name":"Dessy", "email":"aninakwa2@gmail.com", "password":"abc455"}
 
-Note : For security reasons, the encrypted password is excluded from the response;
+Note <br>
+For security reasons, the encrypted password is excluded from the response; <br>
 
 Response 201 (created) :
 
@@ -89,20 +62,23 @@ Response 201 (created) :
 
 #### POST /user/login
 
-Autheticate an existing user and set JWT in cookies and header
+Autheticate an existing user and set JWT in cookies and header <br>
 
-Headers:
+Headers:<br>
 Content-Type:application/json
 
-set authorization in the header
-example:
+set authorization in the header <br>
+example:<br>
+
+```
 authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjMxNzRlYmRjZjEzN2QzOTBlNWEwYiIsImVtYWlsIjoiYW5pbmFrd2EyQGdtYWlsLmNvbSIsImlhdCI6MTc4MDY4NzA2OSwiZXhwIjoxNzgwODU5ODY5fQ.q2-NdArX9Jzw3CODXaSjxzpwyZvGpPJBF1pDohAIseY
+```
 
 Body:
 
 ##### { "email":"aninakwa2@gmail.com", "password":"abc455"}
 
-No " authorization "in the header , response will be":
+No " authorization "in the header , response will be":<br>
 
 ##### {
 
@@ -110,7 +86,7 @@ No " authorization "in the header , response will be":
 
 }
 
-Response (with ** authorization ** set in the header , valid JWT sent upon successful registeration) :
+Response (with ** authorization ** set in the header , valid JWT sent upon successful registeration) :<br>
 
 ##### {
 
@@ -130,7 +106,7 @@ Response (with ** authorization ** set in the header , valid JWT sent upon succe
 
 ### PAYMENT ENDPOINT && IDEMPOTENCY_MIDDLEWARES
 
-All payment request require authorization: Bearer <token> and idempotency-key in the headers
+All payment request require authorization: Bearer <token> and idempotency-key in the headers <br>
 
 #### POST /process-payment
 
@@ -143,10 +119,12 @@ Content-Type:application/json
 
 example Headers:
 
-\*\* authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjMxNzRlYmRjZjEzN2QzOTBlNWEwYiIsImVtYWlsIjoiYW5pbmFrd2EyQGdtYWlsLmNvbSIsImlhdCI6MTc4MDY4NzA2OSwiZXhwIjoxNzgwODU5ODY5fQ.q2-NdArX9Jzw3CODXaSjxzpwyZvGpPJBF1pDohAIseY
+```
+ authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjMxNzRlYmRjZjEzN2QzOTBlNWEwYiIsImVtYWlsIjoiYW5pbmFrd2EyQGdtYWlsLmNvbSIsImlhdCI6MTc4MDY4NzA2OSwiZXhwIjoxNzgwODU5ODY5fQ.q2-NdArX9Jzw3CODXaSjxzpwyZvGpPJBF1pDohAIseY
 Body:
 
-idempotency-key: abc123 \*\*
+idempotency-key: abc123
+```
 
 Body:
 
@@ -272,8 +250,8 @@ The createdAt field on each IdempotencyRecord has a TTL (Time To Live) of 24hrs,
 _Feautures addedd_:
 Every Idempotency Record / document has the user mongoose ObjectId referencing the User who made that request
 
-- why this matter's for a real fintech company
-  in production payment system regulators require answers to these questions
+-why this matter's for a real fintech company
+in production payment system regulators require answers to these questions
 
 -"Who made the transaction"
 -"Did this user attempt to make this same payment request twice ? "
@@ -284,4 +262,4 @@ A complaince Officer or Fraud Analyst can query
 
 #### Idempotency.findOne({user:userId})
 
--and get all the transaction history, cache response and duplicate detection event for such user without touching the payment collection at all
+and get all the transaction history, cache response and duplicate detection event for such user without touching the payment collection at all
