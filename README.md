@@ -36,12 +36,13 @@ If you checked all the boxes above, submit your repository link in the applicati
 
 ## **Setup Instructions**
 
-1.Clone the repository
+1.Clone the repository <br>
 git clone https://github.com/aninakwadesmond/Idempotency-Gateway.git
 
-2. Install dependencies
+2. Install dependencies <br>
    npm install
 
+```
 3. Create your environment file
    .env
    Then fill in this values:
@@ -49,8 +50,9 @@ git clone https://github.com/aninakwadesmond/Idempotency-Gateway.git
    -PORT=3001
    -MONGO_URL=mongodb+srv://aninakwahdesmond3_db_user:mista334@cluster0.ypti1pb.mongodb.net/?appName=Cluster0
    -JWT_SECRET_KEY=mista334
+```
 
-4. Start the server
+4. Start the server <br>
    npm start
 
 ## API DOCUMENTATION
