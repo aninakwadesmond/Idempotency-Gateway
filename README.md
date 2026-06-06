@@ -78,7 +78,7 @@ Body:
 
 ##### { "email":"aninakwa2@gmail.com", "password":"abc455"}
 
-No " authorization "in the header , response will be":<br>
+No " authorization "in the header and no jwt set in the cookies, response will be":<br>
 
 ##### {
 
