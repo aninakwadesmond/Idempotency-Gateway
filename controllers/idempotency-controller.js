@@ -14,7 +14,7 @@ async function paymentProcessing(req, res, next) {
     status: 'success',
     message: 'Charged 100 GHS',
     transaction_id: idempotencyRecord._id,
-    timeStamp: Date.now(),
+    timeStamp: new Date().toISOString(),
   };
 
   let statusCode = 201;
