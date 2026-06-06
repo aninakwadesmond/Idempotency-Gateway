@@ -1,133 +1,281 @@
-# Idempotency-Gateway (The "Pay-Once" Protocol)
-This challenge is designed to test your ability to bridge Computer Science fundamentals with Modern Backend Engineering.
-
-## 1. Business Context
-> **Client:** *FinSafe Transactions Ltd.* (A fast-growing Payment Processor).
-
-### The Problem
-FinSafe's clients (e-commerce shops) occasionally experience network timeouts. When this happens, their servers automatically retry sending payment requests. Recently, this has led to a critical issue: **Double Charging**.
-
-If a customer clicks "Pay," the request is sent, but the network lags. The client retries the request. FinSafe processes *both* requests, charging the customer twice. This is causing customer churn and regulatory headaches.
-
-### The Solution
-FinSafe needs you to build an **Idempotency Layer**. This is a middleware service (or API) that ensures no matter how many times a client sends the same request, the payment is processed **exactly once**.
-
----
-
-## 2. Technical Objective
-Build a RESTful API that mimics a payment processing backend. It must check for a unique `Idempotency-Key` in the HTTP headers.
-
-* **First Request:** Process the payment and save the response.
-* **Duplicate Request:** Detect the existing key and return the *saved* response immediately, without processing the payment again.
-
-
----
-
-## 3. Getting Started
-
-1.  **Fork this Repository:** Do not clone it directly. Create a fork to your own GitHub account.
-2.  **Environment:** You may use **Node.js, Python, Java or Go, etc.**. You may use any database or in-memory store (Redis, SQLite, or a simple native Map/Dictionary variable).
-3.  **Submission:** Your final submission will be a link to your forked repository containing the source code and documentation.
-
----
-
-## 4. The Architecture Diagram 
-**Task:** Before you write any code, you must design the logic flow.
-**Deliverable:** A **Sequence Diagram** or **Flowchart** included in your README.
-
----
-
-## 5. User Stories & Acceptance Criteria
-
-### User Story 1: The First Transaction (Happy Path)
-**As a** client system (e.g., an online store),  
-**I want to** send a payment request with a unique ID,  
-**So that** my transaction is processed successfully.
-
-**Acceptance Criteria:**
-- [ ] The API accepts a `POST` request to endpoint `/process-payment`.
-- [ ] The request header must contain `Idempotency-Key: <some-unique-string>`.
-- [ ] The request body accepts a JSON object (e.g., `{"amount": 100, "currency": "GHS"}`).
-- [ ] The server simulates processing (e.g., a 2-second delay) and returns a `200 OK` or `201 Created` response.
-- [ ] The response body should include a status message: `"Charged 100 GHS"`.
-
-### User Story 2: The Duplicate Attempt (Idempotency Logic)
-**As a** client system,  
-**I want to** safely retry a request if I don't hear back,  
-**So that** I don't accidentally double-charge the user.
-
-**Acceptance Criteria:**
-- [ ] If the client sends a second `POST` request with the **same** `Idempotency-Key` and payload:
-    - [ ] The server must **NOT** run the processing logic again (no 2-second delay).
-    - [ ] The server must return the **exact same** response body and status code as the first successful request.
-    - [ ] The server returns a header `X-Cache-Hit: true` to indicate this was a replayed response.
-
-### User Story 3: Different Request, Same Key (Fraud/Error Check)
-**As a** security officer,  
-**I want to** reject requests that reuse keys for different payments,  
-**So that** we maintain data integrity.
-
-**Acceptance Criteria:**
-- [ ] If a request arrives with an existing `Idempotency-Key` but a **different** request body (e.g., changing amount from 100 to 500):
-    - [ ] The server must return a `422 Unprocessable Entity` or `409 Conflict` error.
-    - [ ] The error message should state: `"Idempotency key already used for a different request body."`
-
----
-
-## 6. Bonus User Story (The "In-Flight" Check)
-**As a** system architect,  
-**I want to** handle cases where two identical requests arrive at the exact same time,  
-**So that** we don't succumb to race conditions.
-
-**Scenario:** Request A arrives. While Request A is still "processing" (during the 2-second delay), Request B (same key) arrives.
-
-**Acceptance Criteria:**
-- [ ] Request B should not start a new process.
-- [ ] Request B should not return `409 Conflict`.
-- [ ] Request B should wait (block) until Request A finishes, and then return the result of Request A.
-
----
-
-## 7. The "Developer's Choice" Challenge
-We believe great engineers are also product thinkers.
-
-**Task:** Identify **one** additional feature or safety mechanism that would make this system better for a real-world Fintech company.
-1.  **Implement it.**
-2.  **Document it:** Explain *why* you added it in your README.
-
----
-
-## 8. Documentation Requirements
-Your final `README.md` must replace these instructions. It must cover:
-
-1.  **Architecture Diagram**
-2.  **Setup Instructions**
-3.  **API Documentation** 
-4.  **Design Decisions** 
-5.  **The Developer's Choice:** Description of the extra feature you added.
-
----
 Submit your repo link via the [online](https://forms.office.com/e/rGKtfeZCsH) form.
 
 ---
+
 ## 🛑 Pre-Submission Checklist
+
 **WARNING:** Before you submit your solution, you **MUST** pass every item on this list.
 If you miss any of these critical steps, your submission will be **automatically rejected** and you will **NOT** be invited to an interview.
 
 ### 1. 📂 Repository & Code
+
 - [ ] **Public Access:** Is your GitHub repository set to **Public**? (We cannot review private repos).
 - [ ] **Clean Code:** Did you remove unnecessary files (like `node_modules`, `.env` with real keys, or `.DS_Store`)?
 - [ ] **Run Check:** if we clone your repo and run `npm start` (or equivalent), does the server start immediately without crashing?
 
 ### 2. 📄 Documentation (Crucial)
+
 - [ ] **Architecture Diagram:** Did you include a visual Diagram (Flowchart or Sequence Diagram) in the README?
 - [ ] **README Swap:** Did you **DELETE** the original instructions (the problem brief) from this file and replace it with your own documentation?
 - [ ] **API Docs:** Is there a clear list of Endpoints and Example Requests in the README?
 
-
 ### 3. 🧹 Git Hygiene
+
 - [ ] **Commit History:** Does your repo have multiple commits with meaningful messages? (A single "Initial Commit" is a red flag).
 
 ---
+
 **Ready?**
 If you checked all the boxes above, submit your repository link in the application form. Good luck! 🚀
+
+# Idempotency Gateway - FinSafe Transaction
+
+## Architecture Diagram
+
+![FlowChart](./doc//FlowChart.png)
+
+## **Setup Instructions**
+
+Clone my fork repository
+git clone https://github.com/aninakwadesmond/Idempotency-Gateway.git
+
+2. Initialize with npm init -y
+
+3. npm install express mongoose jsonwebtoken dotenv cors cookie-parser bcrypt nodemon
+
+4. Create .env file to keep my SECRET_KEYS
+   ** PORT=3001 ** ,MONGO_URL, JWT_SECRET_KEY
+
+5. Start server
+   npm start
+
+## API DOCUMENTATION
+
+### AUHT ENDPOINT / USER AUTHENTICATION
+
+#### POST /user/register
+
+Create a new User account if one account of such email does not exist in the database.
+Set JWT token in the cookies and header and will be pass alongside any other request.
+
+Headers:
+Content-Type:application/json
+
+Body:
+
+##### {"name":"Dessy", "email":"aninakwa2@gmail.com", "password":"abc455"}
+
+Note : For security reasons, the encrypted password is excluded from the response;
+
+Response 201 (created) :
+
+##### {
+
+    "result": {
+    "status": "successfully registered",
+    "name": "Dessy",
+    "email": "aninakwa10013313311@gmail.com",
+    "\_id": "6a23e7437f9209325ba9e6c6"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjNlNzQzN2Y5MjA5MzI1YmE5ZTZjNiIsImVtYWlsIjoiYW5pbmFrd2ExMDAxMzMxMzMxMUBnbWFpbC5jb20iLCJpYXQiOjE3ODA3Mzc4NTksImV4cCI6MTc4MDkxMDY1OX0.Ors3Nb30XfqkivxbHQ0imDusQyTmHAKvL2FepW7tuUs"
+
+}
+
+#### POST /user/login
+
+Autheticate an existing user and set JWT in cookies and header
+
+Headers:
+Content-Type:application/json
+
+set authorization in the header
+example:
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjMxNzRlYmRjZjEzN2QzOTBlNWEwYiIsImVtYWlsIjoiYW5pbmFrd2EyQGdtYWlsLmNvbSIsImlhdCI6MTc4MDY4NzA2OSwiZXhwIjoxNzgwODU5ODY5fQ.q2-NdArX9Jzw3CODXaSjxzpwyZvGpPJBF1pDohAIseY
+
+Body:
+
+##### { "email":"aninakwa2@gmail.com", "password":"abc455"}
+
+No " authorization "in the header , response will be":
+
+##### {
+
+    "message": "Unauthorized user. Please register for a token"
+
+}
+
+Response (with ** authorization ** set in the header , valid JWT sent upon successful registeration) :
+
+##### {
+
+    "message": "successfully login",
+    "existUser": {
+    "\_id": "6a23174ebdcf137d390e5a0b",
+    "userName": "Dessy",
+    "email": "aninakwa2@gmail.com",
+    "password": "$2b$10$PAWrpTAdVZm/LpBX9aUj1OPhchlxe/VMhEGKTYjYV0fD4pD4OHSIa",
+    "createdAt": "2026-06-05T18:37:02.967Z",
+    "updatedAt": "2026-06-05T18:37:02.967Z",
+    "\_\_v": 0
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjMxNzRlYmRjZjEzN2QzOTBlNWEwYiIsImVtYWlsIjoiYW5pbmFrd2EyQGdtYWlsLmNvbSIsImlhdCI6MTc4MDczOTA5MiwiZXhwIjoxNzgwOTExODkyfQ.GfnU_E5SClzIwEJa0N7OAdLddrRjEfLQjt-zRgHV8pM"
+
+}
+
+### PAYMENT ENDPOINT && IDEMPOTENCY_MIDDLEWARES
+
+All payment request require authorization: Bearer <token> and idempotency-key in the headers
+
+#### POST /process-payment
+
+Initialize new Payment with protected middlewares thus JWT auth and idempotency middleware
+
+Headers:
+authorization:Bearer <token>,
+idempotency-key:<unique uuid>,
+Content-Type:application/json
+
+example Headers:
+
+\*\* authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjMxNzRlYmRjZjEzN2QzOTBlNWEwYiIsImVtYWlsIjoiYW5pbmFrd2EyQGdtYWlsLmNvbSIsImlhdCI6MTc4MDY4NzA2OSwiZXhwIjoxNzgwODU5ODY5fQ.q2-NdArX9Jzw3CODXaSjxzpwyZvGpPJBF1pDohAIseY
+Body:
+
+idempotency-key: abc123 \*\*
+
+Body:
+
+##### {"amount": 10,"currency":"GH" }
+
+Response 201 (first time request created):
+
+##### {
+
+    "\_id": "6a23f00e0d34b7b6e609f8dc",
+    "key": "abc123",
+    "bodyHash": "05f28f0929efc09dd3355e05c35b1fd8d0c7ffc5bf4ba1f2ec95b3730c9f72cd",
+    "status": "completed",
+    "responseBody": {
+    "status": "success",
+    "message": "Charged 100 GHS",
+    "transaction_id": "6a23f00e0d34b7b6e609f8dc",
+    "timeStamp": 1780740113130
+    },
+    "statusCode": 201,
+    "user": {
+    "\_id": "6a23174ebdcf137d390e5a0b",
+    "userName": "Dessy",
+    "email": "aninakwa2@gmail.com"
+    },
+    "createdAt": "2026-06-06T10:01:50.712Z",
+    "\_\_v": 0
+
+}
+
+Response 201 (duplicate request , same key, same body)
+Exact same response as the first request no new request charge
+
+##### {
+
+    "status": "success",
+    "message": "Charged 100 GHS",
+    "transaction_id": "6a23f00e0d34b7b6e609f8dc",
+    "timeStamp": 1780740113130
+
+}
+
+Response 409 (same key, but different body)
+if the body is change from the initial amount to a new value like 20 or 100 or any value
+Body:
+
+##### {"amount": 100,"currency":"GH" }
+
+Response output:
+
+#####
+
+{
+
+    "message": "Idempotency key already used for a different request body."
+
+}
+
+Reposnse 400 (!No _idemptency-key_ in the header
+)
+Body:
+
+##### {"amount": 10,"currency":"GH" }
+
+Response output:
+
+##### {
+
+    "message": "Idempotency key is required in the header"
+
+}
+
+Reposnse 403 (!No _authorization_ set in the header)
+Body:
+
+##### {"amount": 10,"currency":"GH" }
+
+Response output:
+
+##### {
+
+    "message": "Unauthorized user. Please register for a token"
+
+}
+
+## DESIGN DOCUMENTATION
+
+### 1. JWT AUHTHENTICATION
+
+Every payment request is protected by a JWT middleware that runs before Idempotency middleware which means:
+-only authentictated user can initialize payment
+-if token is expires, the request never reach the Idempotency layer at all
+
+### User reference on every Idempotency Record
+
+Every Idempotency record stores user mongoose objectID which means:
+-Every transaction is traceable back to the original user that initiate the payment
+-you can query all transaction by a specific user
+-used for audit trial and fraud detection/investigation in real fraud cases
+
+### SHA-256 Body Hashing for Tamper Detection
+
+Instead of storing the entire reuest in the db we the hashed output from Sha-256 algorithm
+
+-if a user send a request with same idempotency but different amount in the request body we tamper/interfer and return 422 immediately. Flag for fraud
+
+crypto with 'sha-256'algorithm is used instead of brypt.hash() because crypto is more deterministic:
+-same input/payload will always hash to the same output
+-bcrypt attach and random value for same input make it impossible to compare with bcrypt.compare().Moslty recommended for password hash not a request.body hash
+
+### Poling-based flight lock(Race condition)
+
+when two identical request happens same time the second request polls MongoDB every 200ms(waiting for some few seconds to complete the process)
+Avoiding double request which may result in double charging
+
+### Mongo TTL index (24 hours expiry)
+
+The createdAt field on each IdempotencyRecord has a TTL (Time To Live) of 24hrs, so after the TTL the document is automatically delected without any cleanup code needed
+-making the same Idempotency-key reusable after 24hrs
+
+## Developer's choice - User scoped Audit trials
+
+_Feautures addedd_:
+Every Idempotency Record / document has the user mongoose ObjectId referencing the User who made that request
+
+- why this matter's for a real fintech company
+  in production payment system regulators require answers to these questions
+
+-"Who made the transaction"
+-"Did this user attempt to make this same payment request twice ? "
+-"Show me all the transaction by this user in the last 24hrs"
+
+By linking the Idempotency record with the user's id we fully support audit trial out of the box.
+A complaince Officer or Fraud Analyst can query
+
+#### Idempotency.findOne({user:userId})
+
+-and get all the transaction history, cache response and duplicate detection event for such user without touching the payment collection at all
