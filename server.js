@@ -21,7 +21,10 @@ app.use(express.json());
 app.use(cookiesParser());
 app.use(
   cors({
-    origin: 'http://localhost:3001/',
+    origin: [
+      'http://localhost:3001/',
+      'https://idempotency-gateway-xm1o.onrender.com',
+    ],
     credentials: true,
   }),
 );
