@@ -7,6 +7,7 @@ const { userRoute } = require('./routes/user-route');
 const cors = require('cors');
 const cookiesParser = require('cookie-parser');
 const healthRoute = require('./routes/health-route');
+const config = require('config');
 
 //initializing app
 const app = express();
@@ -14,7 +15,7 @@ const app = express();
 //connect to mongoDb
 ConnectDb();
 
-const port = process.env.PORT || 3000;
+const port = config.get('PORT') || 3000;
 
 // security
 app.use(express.json());

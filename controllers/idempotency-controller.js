@@ -1,8 +1,20 @@
-const { Idempotency } = require('../models/idempotenty-model');
+const {
+  Idempotency,
+  validateIdempotencyBody,
+} = require('../models/idempotenty-model');
 
 async function paymentProcessing(req, res, next) {
-  console.log('moved to controller');
+  const { error } = validateIdempotencyBody(req.body);
+
+  if (error)
+    return res.status(400).json({
+      message:
+        error?.details[0].message ?? 'amount and currency fields are required',
+    });
+
   const { amount, currency } = req.body;
+
+  console.log('amount', amount, 'currency', currency);
   const idempotencyRecord = req.idempotency;
 
   console.log('req idempotency ', idempotencyRecord);

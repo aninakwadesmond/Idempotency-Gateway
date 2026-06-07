@@ -1,4 +1,7 @@
-const { Idempotency } = require('../models/idempotenty-model');
+const {
+  Idempotency,
+  validateIdempotencyBody,
+} = require('../models/idempotenty-model');
 const { hashBody } = require('../utils/hashBody');
 const { waitingForCompletion } = require('../utils/waitingForCompletion');
 
@@ -7,6 +10,14 @@ async function IdempotencyMiddleware(req, res, next) {
   const key = req.headers['idempotency-key'];
   // console.log('key', key);
   const { id } = req.user;
+
+  const { error } = validateIdempotencyBody(req.body);
+
+  if (error)
+    return res.status(400).json({
+      message:
+        error?.details[0].message ?? 'amount and currency fields are required',
+    });
 
   // console.log('userId', id);
   if (!key) {

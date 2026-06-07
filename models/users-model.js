@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Joi = require('joi');
+const PasswordComplexity = require('joi-password-complexity');
+
+const config = require('config');
 
 const userSchema = new mongoose.Schema(
   {
@@ -29,7 +33,7 @@ userSchema.methods.comparePassword = async function (password) {
 userSchema.methods.genAuthToken = function () {
   const token = jwt.sign(
     { id: this._id, email: this.email },
-    process.env.JWT_SECRET_KEY,
+    config.get('JWT_SECRET_KEY'),
     { expiresIn: '2d' },
   );
 
@@ -38,4 +42,43 @@ userSchema.methods.genAuthToken = function () {
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = { User };
+// validate user request body
+
+const complexityOptions = {
+  min: 4,
+  max: 40,
+  lowerCase: 1,
+  upperCase: 1,
+  numeric: 1,
+  symbol: 1,
+  requirementCount: 1,
+};
+
+function validateUser(req) {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().required().email(),
+    password: PasswordComplexity(complexityOptions).required(),
+  });
+
+  return schema.validate(req, {
+    abortEarly: false,
+    allowUnknown: false,
+    stripUnknown: true,
+  });
+}
+
+function validateUserLogin(req) {
+  const schema = Joi.object({
+    email: Joi.string().required().email(),
+    password: PasswordComplexity(complexityOptions).required(),
+  });
+
+  return schema.validate(req, {
+    abortEarly: false,
+    allowUnknown: false,
+    stripUnknown: true,
+  });
+}
+
+module.exports = { User, validateUser, validateUserLogin };

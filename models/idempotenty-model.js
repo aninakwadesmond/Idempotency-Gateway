@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const idempotencySchema = new mongoose.Schema({
   key: { type: String, required: true, unique: true },
@@ -16,4 +17,19 @@ const idempotencySchema = new mongoose.Schema({
 
 const Idempotency = mongoose.model('Idempotency', idempotencySchema);
 
-module.exports = { Idempotency };
+// valid user idempotency body request
+
+function validateIdempotencyBody(req) {
+  const schema = Joi.object({
+    amount: Joi.number().required(),
+    currency: Joi.string().required(),
+  });
+
+  return schema.validate(req, {
+    abortEarly: false,
+    allowUnknown: false,
+    stripUnknown: true,
+  });
+}
+
+module.exports = { Idempotency, validateIdempotencyBody };

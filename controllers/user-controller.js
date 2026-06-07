@@ -1,7 +1,19 @@
-const { User } = require('../models/users-model');
+const {
+  User,
+  validateUser,
+  validateUserLogin,
+} = require('../models/users-model');
 const _ = require('lodash');
 
 async function userRegisterController(req, res, next) {
+  const { error } = validateUser(req.body);
+
+  if (error)
+    return res.status(400).json({
+      message:
+        error?.details[0].message ||
+        'name , email and password fields required',
+    });
   // const { id, email } = req.user;
   const { email, name, password } = req.body;
 
@@ -53,6 +65,10 @@ async function userRegisterController(req, res, next) {
 }
 
 async function userLoginController(req, res, next) {
+  const { error } = validateUserLogin(req.body);
+  if (error)
+    return res.status(400).json({ message: error?.details[0].message });
+
   const { id, email } = req.user;
   const { email: userEmail, password } = req.body;
   if (!id || !email)
