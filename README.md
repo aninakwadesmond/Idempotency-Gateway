@@ -1,5 +1,3 @@
-Submit your repo link via the [online](https://forms.office.com/e/rGKtfeZCsH) form.
-
 # Idempotency Gateway - FinSafe Transaction
 
 ## Architecture Diagram
