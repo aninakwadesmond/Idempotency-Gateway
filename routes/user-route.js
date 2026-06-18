@@ -8,6 +8,7 @@ const {
 const { authMiddleware } = require('../auth/auth-middleware');
 
 userRoute.post('/register', userRegisterController);
+
 userRoute.post('/login', authMiddleware, userLoginController);
 
 module.exports = { userRoute };

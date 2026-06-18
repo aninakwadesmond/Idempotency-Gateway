@@ -27,7 +27,7 @@ function authMiddleware(req, res, next) {
   try {
     const decode = jwt.decode(token, process.env.JWT_SECRET_KEY);
 
-    req.user = decode;
+    req.user = decode; //{id,email }
 
     next();
   } catch (error) {

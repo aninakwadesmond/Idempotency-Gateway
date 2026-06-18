@@ -71,7 +71,9 @@ async function IdempotencyMiddleware(req, res, next) {
     try {
       record = await waitingForCompletion(key);
 
-      return res.status(record.statusCode).json(record.responseBody);
+      return res
+        .status(record.statusCode)
+        .json({ message: 'processing', response: record.responseBody });
     } catch (error) {
       return res.status(503).json({
         message: 'Processing timeout , Please  try again',

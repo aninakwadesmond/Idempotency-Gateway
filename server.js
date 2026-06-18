@@ -19,7 +19,7 @@ const port = config.get('PORT') || 3000;
 
 // security
 app.use(express.json());
-app.use(cookiesParser());
+app.use(cookiesParser()); //req.cookie
 app.use(
   cors({
     origin: [
@@ -33,6 +33,7 @@ app.use(
 // routes
 app.use('/process-payment', paymentRoute);
 app.use('/user', userRoute);
+
 app.use('/health', healthRoute);
 
 // errorHandler
